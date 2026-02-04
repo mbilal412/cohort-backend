@@ -24,7 +24,7 @@ function App() {
   }
 
   function fetchNotes() {
-    axios.get('http://localhost:3000/api/notes')
+    axios.get('https://cohort-backend-ykgt.onrender.com/api/notes')
       .then(res => {
         setNotes(res.data.note)
       })
@@ -41,7 +41,7 @@ function App() {
     e.preventDefault()
     const { title, description } = e.target.elements
 
-    axios.post('http://localhost:3000/api/notes', { title: title.value, description: description.value })
+    axios.post('https://cohort-backend-ykgt.onrender.com/api/notes', { title: title.value, description: description.value })
       .then(res => {
         console.log(res.data)
         fetchNotes()
@@ -51,7 +51,7 @@ function App() {
 
 
   function deleteNote(id) {
-    axios.delete(`http://localhost:3000/api/notes/${id}`)
+    axios.delete(`https://cohort-backend-ykgt.onrender.com/api/notes/${id}`)
       .then((res) => {
         console.log(res.data)
         fetchNotes()
@@ -61,7 +61,7 @@ function App() {
   function updateNote(e) {
     e.preventDefault()
     const { updateTitle, updateDescription } = e.target.elements
-    axios.patch(`http://localhost:3000/api/notes/${activeID}`, { title: updateTitle.value, description: updateDescription.value })
+    axios.patch(`https://cohort-backend-ykgt.onrender.com/api/notes/${activeID}`, { title: updateTitle.value, description: updateDescription.value })
       .then(res => {
         console.log(res.data)
         closeForm()
