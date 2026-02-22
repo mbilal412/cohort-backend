@@ -26,7 +26,7 @@ async function registerController(req, res) {
 
 
 
-    const hash = bcrypt.hash(password, 10)
+    const hash = await bcrypt.hash(password, 10)
 
 
 
@@ -41,7 +41,7 @@ async function registerController(req, res) {
     const token = jwt.sign(
         {
             id: user._id
-        }, process.env.JWT,
+        }, process.env.JWT_SECRET_KEY,
         { expiresIn: '1d' }
     )
 
@@ -74,23 +74,23 @@ async function loginController(req, res) {
         }
     )
 
-    if (!user) {
-        return res.status(404).json({
-            message: "user not found"
+    if(!user){
+        return res.status(401).json({
+            message: "incorrect username or email"
         })
     }
 
-    const isPasswordMatch = bcrypt.compare(password, user.password)
+    const isPasswordMatch = await bcrypt.compare(password, user.password)
 
     if (!isPasswordMatch) {
-        return res.status(404).json({
+        return res.status(401).json({
             message: "wrong password"
         })
     }
     const token = jwt.sign(
         {
             id: user._id
-        }, process.env.JWT,
+        }, process.env.JWT_SECRET_KEY,
         { expiresIn: '1d' }
     )
 
@@ -106,11 +106,31 @@ async function loginController(req, res) {
         }
     })
 
+}
 
+async function getMeController(req, res) {
+    const userId = req.user.id
 
+    const user = await userModel.findById(userId)
+
+    if(!user){
+        return res.status(404).json({
+            message: "user not found"
+        })
+    }
+
+    res.status(200).json({
+        user: {
+            username: user.username,
+            email: user.email,
+            bio: user.bio,
+            profileImage: user.profileImg
+        }
+    })
 }
 
 module.exports = {
     registerController,
-    loginController
+    loginController,
+    getMeController
 }
