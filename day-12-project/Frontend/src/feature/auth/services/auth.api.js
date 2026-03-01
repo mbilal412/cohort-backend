@@ -4,39 +4,31 @@ const api = axios.create({
     baseURL: 'http://localhost:3000/api/auth',
     withCredentials: true
 })
-
-export async function login(email, password) {
+export async function registerUser(email, username, password, profileImage) {
+    const formData = new FormData()
+    formData.append('email', email)
+    formData.append('username', username)
+    formData.append('password', password)
+    formData.append('profile-image', profileImage)
     try {
-        const response = await api.post('login', {
-            email,
-            password
-        })
-
+        const response = await api.post('/register', formData)
         return response.data
     }
     catch (error) {
-        throw error.response?.data || { message: "something went wrong" }
+        throw error
     }
 
-
 }
 
+export async function loginUser(email, password){
+    try{
+        const response = await api.post('/login', {
+            email, password
+        })
+        return response.data
+    }
 
-
-export async function register(username, email, password) {
-    const response = await api.post('register', {
-        username,
-        email,
-        password
-    })
-
-    return response.data
-
-}
-
-
-export async function getMe() {
-    const response = await axios.get('/get-me')
-
-    return response.data
+    catch(error){
+        throw error
+    }
 }

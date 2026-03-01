@@ -1,0 +1,64 @@
+main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .form-container {
+        min-width: 350px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+
+            
+
+            label {
+                width: 100%;
+                padding: 0.75rem 1.25rem;
+                border-radius: 0.5rem;
+                border: 1px solid #ccc;
+                background-color: #f5f5f5;
+                text-transform: capitalize;
+                cursor: pointer;
+                text-align: center;
+                transition: background-color 0.3s ease;
+                color: black;
+                font-weight: 600;
+                font-size: 1.25rem;
+
+                &:hover {
+                    background-color: #afafaf;
+                }
+            }
+
+            input,
+            button {
+                width: 100%;
+                padding: 0.75rem 1.25rem;
+                border-radius: 0.5rem;
+                border: 1px solid #ccc;
+                border: none;
+                outline: none;
+                font-size: 1rem;
+            }
+
+
+                a{
+                    color: #007bff;
+                    text-decoration: none;
+                    font-weight: 500;
+                }
+            
+        }
+    }
+}

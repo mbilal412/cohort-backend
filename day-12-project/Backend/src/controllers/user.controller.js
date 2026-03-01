@@ -141,4 +141,6 @@ async function unfollowUserController(req, res) {
 
 }
 
-module.exports = { followUserController, unfollowUserController, acceptFollowRequestController, rejectFollowRequestController }
+
+
+module.exports = { followUserController, unfollowUserController, acceptFollowRequestController, rejectFollowRequestController, getFollowers }

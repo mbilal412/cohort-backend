@@ -1,45 +1,35 @@
-import { login, register } from '../services/auth.api';
-import { AuthContext } from '../auth.context';
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { registerUser, loginUser } from "../services/auth.api"
 
 export const useAuth = () => {
 
-    const navigate = useNavigate()
-    const context = useContext(AuthContext)
 
-    const { user, setUser, loading, setLoading } = context
-    const handleLogin = async (email, password) => {
+    async function handleRegister(email, username, password, profileImage) {
 
         try {
-            setLoading(true)
-            const response = await login(email, password)
+            const response = await registerUser(email, username, password, profileImage)
+            console.log(response)
 
-            setUser(response.user)
-            setLoading(false)
-            return true
+        } catch (error) {
+            throw error.response.data
         }
-        catch (error) {
-            setUser(null)
-            navigate('/login')
-            console.log(error)
-            return false
-        }
-        finally {
-            setLoading(false)
-        }
+
+        
 
     }
 
-    const handleRegister = async (email, username, password) => {
-        setLoading(true)
-        const response = await register(email, username, password)
-        setUser(response.user)
-        setLoading(false)
+    async function handleLogin(email, password) {
+        try{
+            const response = await loginUser(email, password)
+            
+            console.log(response)
+        }
+        catch(error){
+            throw error.response.data
+        }
     }
 
     return {
-        handleLogin, handleRegister, user, loading
-    }
-
+            handleRegister,
+            handleLogin
+        }
 }

@@ -1,13 +1,25 @@
 const userModel = require('../models/user.model')
+const imageKit = require('@imagekit/nodejs')
+const { toFile } = require("@imagekit/nodejs")
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-async function registerController(req, res) {
 
-    const { username, email, password, bio, profileImg } = req.body
+const client = new imageKit({
+    priveteKey: process.env.IMAGEKIT_PRIVATE_KEY
+})
+async function registerController(req, res) {
+    const file = await client.files.upload({
+        file: await toFile(Buffer.from(req.file.buffer), 'file'),
+        fileName: 'profile-image',
+        folder: 'insta-clone/profile-images'
+        
+    })
+
+    const { username, email, password, bio } = req.body
 
     const isUserAlreadyExist = await userModel.findOne(
         {
-            $or:[
+            $or: [
                 {
                     email
                 },
@@ -35,7 +47,7 @@ async function registerController(req, res) {
         username,
         password: hash,
         bio,
-        profileImg
+        profileImg: file.url
     })
 
     const token = jwt.sign(
@@ -60,10 +72,10 @@ async function registerController(req, res) {
 }
 
 async function loginController(req, res) {
-    const {username, email, password } = req.body
+    const { username, email, password } = req.body
     const user = await userModel.findOne(
         {
-            $or:[
+            $or: [
                 {
                     email
                 },
@@ -72,9 +84,9 @@ async function loginController(req, res) {
                 }
             ]
         }
-    )
+    ).select('+password')
 
-    if(!user){
+    if (!user) {
         return res.status(401).json({
             message: "incorrect username or email"
         })
@@ -108,12 +120,19 @@ async function loginController(req, res) {
 
 }
 
+async function logoutController(req, res) {
+    res.clearCookie('token')
+    res.status(200).json({
+        message: "successfully logged out"
+    })
+}
+
 async function getMeController(req, res) {
     const userId = req.user.id
 
     const user = await userModel.findById(userId)
 
-    if(!user){
+    if (!user) {
         return res.status(404).json({
             message: "user not found"
         })
@@ -132,5 +151,6 @@ async function getMeController(req, res) {
 module.exports = {
     registerController,
     loginController,
-    getMeController
+    getMeController,
+    logoutController
 }

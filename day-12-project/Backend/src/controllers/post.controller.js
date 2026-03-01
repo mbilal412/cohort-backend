@@ -2,7 +2,6 @@ const postModel = require('../models/post.model')
 const imageKit = require('@imagekit/nodejs')
 const { toFile } = require("@imagekit/nodejs")
 const mongoose = require('mongoose')
-const { param } = require('../routes/post.routes')
 const likeModel = require('../models/like.model')
 
 
@@ -13,11 +12,9 @@ async function createPostController(req, res) {
 
     const file = await client.files.upload({
         file: await toFile(Buffer.from(req.file.buffer), 'file'),
-        fileName: 'Test',
-        folder: 'insta-clone'
+        fileName: 'post-image',
+        folder: 'insta-clone/posts'
     })
-
-
 
     const userId = req.user.id
 
@@ -159,4 +156,27 @@ async function unlikePostController(req, res) {
         message: "post unliked"
     })
 }
-module.exports = { createPostController, getPostController, getPostDetailsController, likePostController, unlikePostController }
+
+async function getFeedController(req, res) {
+    const userId = req.user.id
+
+    const posts = await Promise.all((await postModel.find().populate('user').lean())
+        .map(async (post) => {
+            const isLiked = await likeModel.findOne({
+                user: userId,
+                post: post._id
+            })
+
+            post.isLiked = !!isLiked
+
+            return post
+        }))
+
+    res.status(200).json({
+        message: "feed fetched",
+        posts
+    })
+}
+
+
+module.exports = { createPostController, getPostController, getPostDetailsController, likePostController, unlikePostController, getFeedController }
