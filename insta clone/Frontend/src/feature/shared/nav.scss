@@ -1,0 +1,23 @@
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-bottom: 0.5rem ;
+    border-bottom: 1px solid #777777;
+    margin-bottom: 0rem;
+
+    .create-post {
+        display: inline-block;
+        font-size: 1rem;
+        font-weight: 600;
+
+        &:hover {
+            background-color: #0040d7;
+        }
+
+        &:active {
+            scale: 0.96;
+        }
+    }
+}

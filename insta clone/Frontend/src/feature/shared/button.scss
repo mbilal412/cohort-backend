@@ -1,0 +1,22 @@
+button,a {
+  background-color: #0055ff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  &:active {
+    scale: 0.96;
+  }
+
+  &:hover {
+    background-color: #0040d7;
+  }
+
+  
+
+}
+
