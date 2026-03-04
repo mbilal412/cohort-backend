@@ -12,24 +12,21 @@ export const useAuth = () => {
         } catch (error) {
             throw error.response.data
         }
-
-        
-
     }
 
     async function handleLogin(email, password) {
-        try{
+        try {
             const response = await loginUser(email, password)
-            
+
             console.log(response)
         }
-        catch(error){
+        catch (error) {
             throw error.response.data
         }
     }
 
     return {
-            handleRegister,
-            handleLogin
-        }
+        handleRegister,
+        handleLogin
+    }
 }

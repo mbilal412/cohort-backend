@@ -16,7 +16,7 @@ export const usePost = () => {
             console.log(response)
         }
         catch(error){
-            console.log(error.response.data)
+            throw error
             setLoading(false)
         }
     }

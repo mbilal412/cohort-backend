@@ -155,18 +155,61 @@ async function unfollowUserController(req, res) {
 
 }
 
+
+async function cancelFollowRequestController(req, res) {
+    const userId = req.user.id
+    const followeeId = req.params.userId
+
+    if (!mongoose.Types.ObjectId.isValid(followeeId)) {
+        return res.status(400).json({ message: "Invalid ID format" });
+    }
+
+    const isRelationExist = await followModel.findOne({
+        follower: userId,
+        followee: followeeId,
+        status: "pending"
+    })
+
+    if(!isRelationExist){
+        return res.status(404).json({
+            message: "follow request not found"
+        })
+    }
+
+    const deletedRelation = await followModel.findByIdAndDelete(isRelationExist._id)
+
+    res.status(200).json({
+        message: "follow request cancelled",
+        deletedRelation
+    })
+}
+
 async function getFollowers(req, res) {
     const user = req.user.id
 
-    const follows = await followModel.find({ followee: user }).populate('follower')
+    const followers = await followModel.find({ followee: user }).populate('follower')
 
     res.status(200).json({
-        message: 'follows fetched',
-        follows
+        message: 'followers fetched',
+        followers
+    })
+}
+
+
+async function getFollowing(req, res) {
+    const user = req.user.id
+
+    const following = await followModel.find({
+        follower: user
+    }).populate('followee')
+
+    res.status(200).json({
+        message: 'following fetched',
+        following
     })
 }
 
 
 
 
-module.exports = { followUserController, unfollowUserController, acceptFollowRequestController, rejectFollowRequestController, getFollowers }
+module.exports = { followUserController, unfollowUserController, acceptFollowRequestController, rejectFollowRequestController, getFollowers, getFollowing, cancelFollowRequestController }

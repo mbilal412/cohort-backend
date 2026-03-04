@@ -4,13 +4,20 @@ import Post from '../components/Post'
 import { usePost } from '../hooks/usePost'
 import Nav from '../../shared/component/Nav'
 import Users from '../../user/component/Users'
+import { useNavigate } from 'react-router-dom'
 
 const Feed = () => {
     const { handleGetFeed, loading, feed } = usePost()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchFeed = async () => {
-            await handleGetFeed()
+            try{
+                await handleGetFeed()
+            }catch(error){
+                console.log(error.response.data)
+                navigate('/login')
+            }
         }
         fetchFeed()
     }, [])

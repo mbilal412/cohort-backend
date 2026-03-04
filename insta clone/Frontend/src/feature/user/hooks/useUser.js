@@ -1,4 +1,4 @@
-import { getFollowers, acceptRequest, rejectRequest } from "../services/user.api"
+import { getFollowers, acceptRequest, rejectRequest, getFollowing, unfollowUser, cancelFollowRequest } from "../services/user.api"
 import { useContext } from "react"
 import { UserContext } from '../user.context'
 
@@ -11,7 +11,7 @@ export const useUser = () => {
     async function handleGetFollowers(){
         try{
             const response = await getFollowers()
-            setFollowers(response.follows)
+            setFollowers(response.followers)
         }
         catch(error){
             console.log(error.response.data)
@@ -49,7 +49,45 @@ export const useUser = () => {
         }
     }
 
+    async function handleGetFollowing(){
+        try{
+            const response = await getFollowing()
+            setFollowing(response.following)
+        }
+        catch(error){
+            console.log(error.response.data)
+        }
+    }
+
+    async function handleUnfollowUser(userId){
+        try{
+            const response = await unfollowUser(userId)
+            const updatedFollowing = following.filter(f =>{
+                return f.followee._id !== userId
+            })
+            setFollowing(updatedFollowing)
+            console.log(response)
+        }
+        catch(error){
+            console.log(error.response.data)
+        }
+    }
+
+    async function handleCancelFollowRequest(userId){
+        try{
+            const response = await cancelFollowRequest(userId)
+            const updatedFollowing = following.filter(f =>{
+                return f.followee._id !== userId
+            })
+            setFollowing(updatedFollowing)
+            console.log(response)
+        }
+        catch(error){
+            console.log(error.response.data)
+        }
+    }
+
     return {
-        handleGetFollowers,handleAcceptRequest,handleRejectRequest, followers
+        handleGetFollowers,handleAcceptRequest,handleRejectRequest,handleGetFollowing, handleUnfollowUser, handleCancelFollowRequest,  followers, following
     }
 } 

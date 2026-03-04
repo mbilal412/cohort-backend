@@ -33,3 +33,33 @@ export async function rejectRequest(postId){
         throw error
     }
 } 
+
+export async function getFollowing(){
+    try{
+        const response = await api.get('/following')
+        return response.data
+    }
+    catch(error){
+        throw error
+    }
+}
+
+export async function unfollowUser(userId){
+    try{
+        const response = await api.delete(`unfollow/${userId}`)
+        return response.data
+    }
+    catch(error){
+        throw error
+    }
+}
+
+export async function cancelFollowRequest(userId){
+    try{
+        const response = await api.delete(`follow/cancel/${userId}`)
+        return response.data
+    }
+    catch(error){
+        throw error
+    }
+}

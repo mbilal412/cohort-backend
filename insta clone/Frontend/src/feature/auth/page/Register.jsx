@@ -16,6 +16,7 @@ const Register = () => {
     const handleFileChange = (e) => {
         if (e.target.files[0]) {
             setSelectedFile(e.target.files[0].name)
+             
         }
     }
 
@@ -46,7 +47,7 @@ const Register = () => {
                     <input hidden ref={profileImageInputRef} id='profile' type="file" name='profileImage' onChange={handleFileChange} />
                     <label htmlFor="profile">{selectedFile ? `🗃️ ${selectedFile}` : 'Select profile picture'}</label>
                     <button className='register primary-btn' type='submit'>Register</button>
-                    <p>Already have an account? <Link to={"/login"}>Login</Link></p>
+                    <p>Already have an account? <Link className='login-link' to={"/login"}>Login</Link></p>
 
                 </form>
             </div>

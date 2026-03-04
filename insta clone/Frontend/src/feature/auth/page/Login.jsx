@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+
 
 const Login = () => {
 
@@ -32,7 +33,7 @@ const Login = () => {
                     <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder='email' />
                     <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder='password' />
                     <button className='login primary-btn' type='submit'>Login</button>
-                    <p>Dont have an account? <a href="/register">Register</a></p>
+                    <p>Dont have an account? <Link className='register-link' to="/register">Register</Link></p>
 
                 </form>
             </div>
