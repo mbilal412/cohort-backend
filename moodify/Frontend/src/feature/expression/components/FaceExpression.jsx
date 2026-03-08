@@ -1,18 +1,24 @@
 import { useEffect, useRef, useState } from "react";
-import {init, detect} from "../utils/util";
+import { init, detect } from "../utils/util";
+import '../styles/FaceExpression.scss';
 
-
-export default function FaceExpression() {
+export default function FaceExpression({ onClick }){
     const videoRef = useRef(null);
     const landmarkerRef = useRef(null);
     const streamRef = useRef(null);
 
-    const [ expression, setExpression ] = useState("Detecting...");
+    const [expression, setExpression] = useState("Detecting...");
 
-    
+    const handleClick = ()=>{
+        const expression = detect({ videoRef, landmarkerRef, setExpression })
+        console.log(expression)
+        onClick(expression)
+    }
+
+
 
     useEffect(() => {
-        
+
 
         init({
             videoRef,
@@ -34,14 +40,14 @@ export default function FaceExpression() {
     }, []);
 
     return (
-        <div style={{ textAlign: "center" }}>
+        <div className="face-expression-container">
             <video
                 ref={videoRef}
-                style={{ width: "400px", borderRadius: "12px" }}
+                className="camera-feed"
                 playsInline
             />
-            <h2>{expression}</h2>
-            <button onClick={()=>detect({videoRef, landmarkerRef, setExpression})} >Detect expression</button>
+            <h2 className="expression-title">{expression}</h2>
+            <button className="detect-btn" onClick={handleClick} >Detect expression</button>
         </div>
     );
 }
