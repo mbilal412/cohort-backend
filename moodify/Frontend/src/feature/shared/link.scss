@@ -1,0 +1,11 @@
+.link {
+    color: #1ed760;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: #1cdf5f;
+        text-decoration: underline;
+    }
+}
