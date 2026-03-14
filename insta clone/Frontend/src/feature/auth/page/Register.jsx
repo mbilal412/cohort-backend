@@ -5,7 +5,8 @@ import { useNavigate, Link } from 'react-router-dom'
 
 const Register = () => {
     const navigate = useNavigate()
-    const { handleRegister } = useAuth()
+    const { handleRegister, loading } = useAuth()
+    const [formErrors, setFormErrors] = useState({})
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -23,34 +24,45 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            await handleRegister(email, username, password, profileImage)
+            await handleRegister({email, username, password, profileImage})
             navigate('/login')
-        }
-        catch (error) {
-            console.log(error)
-        }
-        finally {
-
             setEmail('')
             setUsername('')
             setPassword('')
         }
+        catch (error) {
+            console.log(error)
+            if(error.errors){
+                const newErrors = {}
+                error.errors.forEach(err => {
+                    newErrors[err.path] = err.msg
+                })
+                setFormErrors(newErrors)
+            }
+            else{
+                setFormErrors({message: error.message})
+            }
+        }
     }
     return (
         <main >
-            <div className='form-container'>
+            <section className='form-container'>
                 <h1>Register</h1>
                 <form onSubmit={handleSubmit}>
                     <input value={username} onChange={(e) => setUsername(e.target.value)} type="text" placeholder='username' />
+                    <p className='error'>{formErrors.username}</p>
                     <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder='email' />
+                    <p className='error'>{formErrors.email}</p>
                     <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder='password' />
+                    <p className='error'>{formErrors.password}</p>
                     <input hidden ref={profileImageInputRef} id='profile' type="file" name='profileImage' onChange={handleFileChange} />
                     <label htmlFor="profile">{selectedFile ? `🗃️ ${selectedFile}` : 'Select profile picture'}</label>
-                    <button className='register primary-btn' type='submit'>Register</button>
+                    <button disabled = {loading} className='register primary-btn' type='submit'>Register</button>
+                    <p className='error'>{formErrors.message}</p>
                     <p>Already have an account? <Link className='login-link' to={"/login"}>Login</Link></p>
 
                 </form>
-            </div>
+            </section>
         </main >
     )
 }

@@ -15,9 +15,9 @@ async function identifyUser(req, res, next){
         decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
     }
     catch (error) {
-        return res.status(401).josn({
-            message: "Unauthorized"
-        })
+        error.statusCode = 401
+        error.message = "Unauthorized"
+        throw error
     }
 
     req.user = decoded

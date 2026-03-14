@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const likeSchema = mongoose.Schema({
     post:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "posts",
+        ref: "Post",
         required: [true, "post is required for like"]
     },
     user:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: "User",
         required: [true, "user is required for like"]
     }
 },

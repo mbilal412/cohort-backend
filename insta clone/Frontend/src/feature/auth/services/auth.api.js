@@ -4,7 +4,7 @@ const api = axios.create({
     baseURL: 'http://localhost:3000/api/auth',
     withCredentials: true
 })
-export async function registerUser(email, username, password, profileImage) {
+export async function registerUser({email, username, password, profileImage}) {
     const formData = new FormData()
     formData.append('email', email)
     formData.append('username', username)
@@ -20,10 +20,11 @@ export async function registerUser(email, username, password, profileImage) {
 
 }
 
-export async function loginUser(email, password){
+export async function loginUser({identifier, password}){
+    
     try{
         const response = await api.post('/login', {
-            email, password
+            identifier, password
         })
         return response.data
     }

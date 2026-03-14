@@ -6,37 +6,50 @@ import { useNavigate, Link } from 'react-router-dom'
 const Login = () => {
 
     const navigate = useNavigate()
-    const { handleLogin } = useAuth()
-    const [email, setEmail] = useState('')
+    const { handleLogin, loading } = useAuth()
+    const [identifier, setIdentifier] = useState('')
     const [password, setPassword] = useState('')
+    const [formErrors, setFormErrors] = useState({})
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        
         try {
-            await handleLogin(email, password)
+            await handleLogin({identifier, password})
 
             navigate('/feed')
+            setIdentifier('')
+            setPassword('')
         }
         catch (error) {
-            console.log(error)
-        }
-        finally {
-            setEmail('')
-            setPassword('')
+            if(error.errors){
+
+                const newErrors = {}
+                error.errors.forEach(err => {
+                    newErrors[err.path] = err.msg
+                })
+                setFormErrors(newErrors)
+            }
+            else{
+                setFormErrors({message: error.message})
+            }
         }
     }
     return (
         <main >
-            <div className='form-container'>
+            <section className='form-container'>
                 <h1>Login</h1>
                 <form onSubmit={handleSubmit}>
-                    <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder='email' />
+                    <input value={identifier} onChange={(e) => setIdentifier(e.target.value)} type="text" placeholder='email or username' />
+                    <p className='error'>{formErrors.email}</p>
                     <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder='password' />
-                    <button className='login primary-btn' type='submit'>Login</button>
+                    <p className='error'>{formErrors.password}</p>
+                    <button disabled = {loading} className='login primary-btn' type='submit'>Login</button>
+                    <p className='error'>{formErrors.message}</p>
                     <p>Dont have an account? <Link className='register-link' to="/register">Register</Link></p>
 
                 </form>
-            </div>
+            </section>
         </main >
     )
 }

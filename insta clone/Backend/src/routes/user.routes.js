@@ -1,4 +1,5 @@
 const userController = require('../controllers/user.controller')
+
 const identifyUser = require('../middleware/auth.middleware')
 const express = require('express')
 

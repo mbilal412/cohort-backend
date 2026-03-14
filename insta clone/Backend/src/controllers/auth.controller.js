@@ -1,13 +1,19 @@
 const userModel = require('../models/user.model')
 const imageKit = require('@imagekit/nodejs')
 const { toFile } = require("@imagekit/nodejs")
-const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const client = new imageKit({
-    priveteKey: process.env.IMAGEKIT_PRIVATE_KEY
+    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
 })
 async function registerController(req, res) {
+    if(!req.file){
+        const error = new Error("profile image is required")
+        error.statusCode = 400
+        throw error
+    }
     const file = await client.files.upload({
         file: await toFile(Buffer.from(req.file.buffer), 'file'),
         fileName: 'profile-image',
@@ -31,21 +37,17 @@ async function registerController(req, res) {
     )
 
     if (isUserAlreadyExist) {
-        return res.status(409).json({
-            message: (isUserAlreadyExist.email === email) ? "email already exist" : "username already exist"
-        })
+        const error = new Error((isUserAlreadyExist.email === email) ? "email already exist" : "username already exist")
+        error.statusCode = 409
+        throw error
     }
-
-
-
-    const hash = await bcrypt.hash(password, 10)
 
 
 
     const user = await userModel.create({
         email,
         username,
-        password: hash,
+        password,
         bio,
         profileImg: file.url
     })
@@ -54,10 +56,14 @@ async function registerController(req, res) {
         {
             id: user._id
         }, process.env.JWT_SECRET_KEY,
-        { expiresIn: '1d' }
+        { expiresIn: '15m' }
     )
 
-    res.cookie('token', token)
+    res.cookie('token', token,{
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    })
 
     res.status(201).json({
         message: "user registered successfully",
@@ -72,41 +78,45 @@ async function registerController(req, res) {
 }
 
 async function loginController(req, res) {
-    const { username, email, password } = req.body
+    const { identifier, password } = req.body
     const user = await userModel.findOne(
         {
             $or: [
                 {
-                    email
+                    email: identifier
                 },
                 {
-                    username
+                    username: identifier
                 }
             ]
         }
     ).select('+password')
 
     if (!user) {
-        return res.status(401).json({
-            message: "incorrect username or email"
-        })
+        const error = new Error("incorrect username or email")
+        error.statusCode = 401
+        throw error
     }
 
-    const isPasswordMatch = await bcrypt.compare(password, user.password)
+    const isPasswordMatch = await user.comparePassword(password)
 
     if (!isPasswordMatch) {
-        return res.status(401).json({
-            message: "wrong password"
-        })
+        const error = new Error("wrong password")
+        error.statusCode = 401
+        throw error
     }
     const token = jwt.sign(
         {
             id: user._id
         }, process.env.JWT_SECRET_KEY,
-        { expiresIn: '1d' }
+        { expiresIn: '15m' }
     )
 
-    res.cookie('token', token)
+    res.cookie('token', token,{
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    })
 
     res.status(200).json({
         message: "successfully logged in",
@@ -121,7 +131,11 @@ async function loginController(req, res) {
 }
 
 async function logoutController(req, res) {
-    res.clearCookie('token')
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    })
     res.status(200).json({
         message: "successfully logged out"
     })
@@ -133,9 +147,9 @@ async function getMeController(req, res) {
     const user = await userModel.findById(userId)
 
     if (!user) {
-        return res.status(404).json({
-            message: "user not found"
-        })
+        const error = new Error("user not found")
+        error.statusCode = 404
+        throw error
     }
 
     res.status(200).json({

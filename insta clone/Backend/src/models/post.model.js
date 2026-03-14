@@ -12,7 +12,7 @@ const postSchema = mongoose.Schema({
 
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
+        ref: "User",
         required: [true, "user is required for post"]
     },
     
@@ -22,6 +22,6 @@ const postSchema = mongoose.Schema({
 )
 
 postSchema.index({ user: 1 , post:1}, { unique: false })
-const postModel = mongoose.model('posts', postSchema)
+const postModel = mongoose.model('Post', postSchema)
 
 module.exports = postModel
