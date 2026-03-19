@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://localhost:3000/api/auth',
+    baseURL: import.meta.env.VITE_BACKEND_URL,
     withCredentials: true
 })
 export async function registerUser({email, username, password, profileImage}) {
@@ -11,7 +11,7 @@ export async function registerUser({email, username, password, profileImage}) {
     formData.append('password', password)
     formData.append('profile-image', profileImage)
     try {
-        const response = await api.post('/register', formData)
+        const response = await api.post('/api/auth/register', formData)
         return response.data
     }
     catch (error) {
@@ -23,7 +23,7 @@ export async function registerUser({email, username, password, profileImage}) {
 export async function loginUser({identifier, password}){
     
     try{
-        const response = await api.post('/login', {
+        const response = await api.post('/api/auth/login', {
             identifier, password
         })
         return response.data
@@ -36,7 +36,7 @@ export async function loginUser({identifier, password}){
 
 export async function getMe(){
     try{
-        const response = await api.get('/get-me')
+        const response = await api.get('/api/auth/get-me')
         return response.data
     }
     catch(error){
