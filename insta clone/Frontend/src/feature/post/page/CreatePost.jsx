@@ -3,6 +3,8 @@ import '../style/createpost.scss'
 import { usePost } from '../hooks/usePost'
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Nav from '../../shared/component/Nav'
+
 const CreatePost = () => {
     const navigate = useNavigate()
     const [selectedPost, setSelectedPost] = useState('')
@@ -29,7 +31,8 @@ const CreatePost = () => {
 
     return (
 
-        <main className='create-post-main'>
+        <main id='create-post-main'>
+            <Nav />
             <div className='create-post-container'>
                 <form onSubmit={handlePost} className='create-post-form'>
                     <textarea

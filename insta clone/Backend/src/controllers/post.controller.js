@@ -10,6 +10,12 @@ const client = new imageKit({
 })
 async function createPostController(req, res) {
 
+    if(!req.file){
+        const error = new Error("file is required")
+        error.statusCode = 400
+        throw error
+    }
+
     const file = await client.files.upload({
         file: await toFile(Buffer.from(req.file.buffer), 'file'),
         fileName: 'post-image',
@@ -59,8 +65,8 @@ async function getPostController(req, res) {
 async function getPostDetailsController(req, res) {
     
     const userId = req.user.id
-    const { id } = req.params
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    const { postId } = req.params
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
         return res.status(400).json({ message: "Invalid ID format" });
     }
     const post = await postModel.findById(req.params.postId)

@@ -1,0 +1,27 @@
+@use "../../shared/global.scss";
+
+$bg-dark: #111;
+
+.network-main {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Aligns content to the top */
+  align-items: center;
+  padding: 1.5rem;
+  background-color: $bg-dark;
+
+  .network-page {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  @media screen and (max-width: 899px) {
+    padding-top: 1rem;
+    .top-nav {
+      display: none; /* Hides top nav on mobile */
+    }
+  }
+}

@@ -1,0 +1,587 @@
+// Variables
+$bg-dark: #0a0a0f;
+$bg-card: #13131a;
+$accent-purple: #6c63ff;
+$accent-glow: rgba(108, 99, 255, 0.4);
+$text-primary: #ffffff;
+$text-secondary: #94a3b8;
+$text-muted: #64748b;
+$border-color: rgba(255, 255, 255, 0.07);
+$input-bg: rgba(255, 255, 255, 0.03);
+$error-red: #ff4d4d;
+
+// Fonts
+$font-heading: 'Sora', sans-serif;
+$font-body: 'DM Sans', sans-serif;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+// Animations
+@keyframes meshGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Layout - Mobile First (Default)
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $bg-dark;
+  font-family: $font-body;
+  color: $text-primary;
+  overflow-x: hidden;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+  }
+
+  &.centered {
+    justify-content: center;
+    align-items: center;
+
+    .form-panel {
+      flex: 0 1 auto;
+      background: transparent;
+      padding: 60px 20px;
+    }
+
+    .auth-form-container {
+      @include glass-card;
+      padding: 40px;
+      border-radius: 24px;
+      margin: 0;
+    }
+  }
+}
+
+// Branding Panel - Default Mobile
+.branding-panel {
+  flex: none;
+  min-height: 100px; // Compact mobile banner
+  
+  position: relative;
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
+  background-size: 400% 400%;
+  animation: meshGradient 15s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  overflow: hidden;
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    flex: 1.2;
+    min-height: 100vh;
+    padding: 40px;
+  }
+
+  // Floating Orbs
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px); // Slightly smaller blur for mobile
+    opacity: 0.15;
+    z-index: 1;
+    animation: float 8s ease-in-out infinite;
+
+    &.orb-1 {
+      width: 150px;
+      height: 150px;
+      background: $accent-purple;
+      top: -30px;
+      left: -30px;
+    }
+
+    &.orb-2 {
+      width: 120px;
+      height: 120px;
+      background: #3b82f6;
+      bottom: -30px;
+      right: -30px;
+      animation-delay: -2s;
+    }
+
+    @media (min-width: 1024px) {
+      filter: blur(80px);
+
+      &.orb-1 {
+        width: 300px;
+        height: 300px;
+        top: -50px;
+        left: -50px;
+      }
+
+      &.orb-2 {
+        width: 250px;
+        height: 250px;
+        bottom: -50px;
+        right: -50px;
+      }
+    }
+  }
+
+  .branding-content {
+    position: relative;
+    z-index: 10;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+
+    @media (min-width: 1024px) {
+      text-align: left;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 0; // Compact for mobile
+
+      @media (min-width: 1024px) {
+        justify-content: flex-start;
+        margin-bottom: 60px;
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        background: $accent-purple;
+        border-radius: 8px;
+        @include flex-center;
+        box-shadow: 0 0 15px $accent-glow;
+
+        svg {
+          width: 18px;
+          height: 18px;
+          color: white;
+        }
+
+        @media (min-width: 1024px) {
+          width: 36px;
+          height: 36px;
+
+          svg {
+            width: 22px;
+            height: 22px;
+          }
+        }
+      }
+
+      span {
+        font-family: $font-heading;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+
+        @media (min-width: 1024px) {
+          font-size: 20px;
+        }
+      }
+    }
+
+    h1 {
+      display: none; // Hide on small mobile banner
+
+      @media (min-width: 1024px) {
+        display: block;
+        font-family: $font-heading;
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 16px;
+        letter-spacing: -1px;
+      }
+    }
+
+    .subtext {
+      display: none; // Hide on small mobile banner
+
+      @media (min-width: 1024px) {
+        display: block;
+        font-size: 18px;
+        color: $text-secondary;
+        margin-bottom: 48px;
+        line-height: 1.6;
+      }
+    }
+
+    .features-list {
+      display: none;
+
+      @media (min-width: 1024px) {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .feature-item {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+
+        .feature-icon {
+          width: 24px;
+          height: 24px;
+          color: $accent-purple;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+
+        .feature-info {
+          h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+          }
+
+          p {
+            font-size: 14px;
+            color: $text-secondary;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Form Panel - Default Mobile
+.form-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #0a0a0f;
+  overflow-y: auto;
+
+  @media (min-width: 1024px) {
+    padding: 25px 20px;
+  }
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 400px;
+  margin: auto 0;
+  animation: fadeInSlide 0.8s ease-out forwards;
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 24px;
+
+    @media (min-width: 1024px) {
+      margin-bottom: 32px;
+    }
+
+    .mobile-logo {
+      display: none; // Already in banner
+    }
+
+    h2 {
+      font-family: $font-heading;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+
+      @media (min-width: 1024px) {
+        font-size: 28px;
+      }
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .verify-icon-large {
+      width: 80px;
+      height: 80px;
+      background: rgba(108, 99, 255, 0.1);
+      border-radius: 20px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $accent-purple;
+      border: 1px solid rgba(108, 99, 255, 0.2);
+      animation: float 6s ease-in-out infinite;
+
+      &.success {
+        background: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+        border-color: rgba(34, 197, 94, 0.2);
+      }
+
+      svg {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+}
+
+.verify-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 32px;
+
+  .resend-btn {
+    background: none;
+    border: 1px solid $border-color;
+    color: $text-secondary;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .submit-btn {
+    text-decoration: none;
+    text-align: center;
+    display: block;
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (min-width: 1024px) {
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+
+      label {
+        font-size: 12px;
+        font-weight: 500;
+        color: $text-secondary;
+      }
+
+      .forgot-link {
+        font-size: 11px;
+        color: $accent-purple;
+        text-decoration: none;
+      }
+    }
+
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex; // Ensures content inside follows layout
+
+      input {
+        width: 100%; // Critical fix for "squeezed" field
+        background: $input-bg;
+        border: 1px solid $border-color;
+        border-radius: 10px;
+        padding: 12px 14px;
+        padding-right: 44px; // Space for toggle icon
+        color: white;
+        font-size: 14px;
+        font-family: $font-body;
+        transition: all 0.3s ease;
+
+        @media (min-width: 1024px) {
+          border-radius: 12px;
+          padding: 14px 16px;
+          padding-right: 48px;
+          font-size: 15px;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: $accent-purple;
+          box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.15);
+        }
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: $text-muted;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+
+        @media (min-width: 1024px) {
+          right: 14px;
+        }
+
+        &:hover {
+          color: white;
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+
+    // Default input for non-password fields
+    input {
+      width: 100%;
+      background: $input-bg;
+      border: 1px solid $border-color;
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: white;
+      font-size: 14px;
+      font-family: $font-body;
+      transition: all 0.3s ease;
+
+      @media (min-width: 1024px) {
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-size: 15px;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $accent-purple;
+        box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.15);
+      }
+    }
+
+    .error-msg {
+      color: $error-red;
+      font-size: 11px;
+      margin-top: 2px;
+    }
+  }
+
+  .submit-btn {
+    background: $accent-purple;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 4px;
+
+    @media (min-width: 1024px) {
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 16px;
+    }
+
+    &:hover {
+      background: lighten($accent-purple, 5%);
+      box-shadow: 0 8px 25px $accent-glow;
+    }
+  }
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 13px;
+  color: $text-secondary;
+
+  a {
+    color: white;
+    font-weight: 600;
+    margin-left: 4px;
+    text-decoration: none;
+
+    &:hover {
+      color: $accent-purple;
+      text-decoration: underline;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    margin-top: 32px;
+    font-size: 14px;
+  }
+}

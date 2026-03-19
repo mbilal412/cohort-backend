@@ -12,9 +12,9 @@ const Feed = () => {
 
     useEffect(() => {
         const fetchFeed = async () => {
-            try{
+            try {
                 await handleGetFeed()
-            }catch(error){
+            } catch (error) {
                 console.log(error.response.data)
                 navigate('/login')
             }
@@ -25,8 +25,6 @@ const Feed = () => {
     if (loading || !feed) {
         return (<main><div>Feed is Loading...</div></main>)
     }
-
-
 
 
     return (

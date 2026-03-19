@@ -1,45 +1,15 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import '../style/users.scss'
 import { useUser } from '../hooks/useUser'
-import { useEffect } from 'react'
 
-const Users = () => {
-
+const Users = ({ isMobileMode }) => {
+  const [activeTab, setActiveTab] = useState('follower')
   const { handleGetFollowers, handleAcceptRequest, handleRejectRequest, handleGetFollowing, handleUnfollowUser, handleCancelFollowRequest, followers, following } = useUser()
 
   useEffect(() => {
     handleGetFollowers()
     handleGetFollowing()
   }, [])
-
-
-
-  const suggestedUsers = [
-    {
-      id: 1,
-      username: 'david_design',
-      profileImg: 'https://ik.imagekit.io/4hjtmx0un/default%20profile.jpg',
-      bio: 'UI/UX Designer'
-    },
-    {
-      id: 2,
-      username: 'priya_music',
-      profileImg: 'https://ik.imagekit.io/4hjtmx0un/default%20profile.jpg',
-      bio: 'Music producer'
-    },
-    {
-      id: 3,
-      username: 'tom_chef',
-      profileImg: 'https://ik.imagekit.io/4hjtmx0un/default%20profile.jpg',
-      bio: 'Food lover'
-    },
-    {
-      id: 4,
-      username: 'nina_fashion',
-      profileImg: 'https://ik.imagekit.io/4hjtmx0un/default%20profile.jpg',
-      bio: 'Fashion enthusiast'
-    }
-  ]
 
   const renderUserCard = (user, type) => (
     <div key={user._id} className='user-card followers-card'>
@@ -54,34 +24,49 @@ const Users = () => {
         </div> : '')}
       {type === 'followee' && (user.status === 'accepted' ?
         <div className="action">
-          <button onClick={()=>handleUnfollowUser(user.followee._id)} className='unfollow-btn'>Unfollow</button>
-        </div> : <button onClick={()=>handleCancelFollowRequest(user.followee._id)} className='cancel-request-btn'>Cancel request</button>)}
+          <button onClick={() => handleUnfollowUser(user.followee._id)} className='unfollow-btn'>Unfollow</button>
+        </div> : <button onClick={() => handleCancelFollowRequest(user.followee._id)} className='cancel-request-btn'>Cancel request</button>)}
     </div>
   )
 
   return (
-    <div className='users-container'>
+    <div className={`users-container ${isMobileMode ? 'mobile-mode' : ''}`}>
 
-      <div className='users-section follower'>
-        <h3 className='section-title'>Followers</h3>
-        <div className='users-list'>
-          {followers ? followers.map(user => renderUserCard(user, 'follower')) : <p>Loading...</p>}
+      {isMobileMode && (
+        <div className="mobile-tabs">
+          <button
+            className={activeTab === 'follower' ? 'active' : ''}
+            onClick={() => setActiveTab('follower')}
+          >
+            follower
+          </button>
+          <button
+            className={activeTab === 'following' ? 'active' : ''}
+            onClick={() => setActiveTab('following')}
+          >
+            following
+          </button>
         </div>
-      </div>
+      )}
 
-      <div className='users-section following'>
-        <h3 className='section-title'>Following</h3>
-        <div className='users-list'>
-          {following ? following.map(user => renderUserCard(user, 'followee')) : <p>Loading...</p>}
+      {(!isMobileMode || activeTab === 'follower') && (
+        <div className='users-section follower'>
+          {!isMobileMode && <h3 className='section-title'>Followers</h3>}
+          <div className='users-list'>
+            {followers ? followers.map(user => renderUserCard(user, 'follower')) : <p>Loading...</p>}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/*<div className='users-section'>
-        <h3 className='section-title'>Suggested For You</h3>
-        <div className='users-list'>
-          {suggestedUsers.map(user => renderUserCard(user))}
+      {(!isMobileMode || activeTab === 'following') && (
+        <div className='users-section following'>
+          {!isMobileMode && <h3 className='section-title'>Following</h3>}
+          <div className='users-list'>
+            {following ? following.map(user => renderUserCard(user, 'followee')) : <p>Loading...</p>}
+          </div>
         </div>
-      </div> */}
+      )}
+
     </div>
   )
 }
