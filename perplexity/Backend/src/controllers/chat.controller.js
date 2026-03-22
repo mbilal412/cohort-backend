@@ -15,26 +15,23 @@ export const sendMessageController = async (req, res) => {
             userId: req.user.id,
             title
         })
-        chatId = chat._id
+        
     }
-
-
-    title = (await chatModel.findById(chatId).select('title -_id')).title
 
     const userMessage = await messageModel.create({
         role: 'user',
         content: message,
-        chatId: chatId
+        chatId : chatId || chat._id
     })
 
-    const messages = await messageModel.find({ chatId });
+    const messages = await messageModel.find({ chatId : chatId || chat._id });
 
     const response = await generateResponse(messages)
 
     const aiMessage = await messageModel.create({
         role: 'assistant',
         content: response,
-        chatId: chatId
+        chatId : chatId || chat._id
     })
 
     res.status(201).json({
@@ -45,6 +42,42 @@ export const sendMessageController = async (req, res) => {
         aiMessage
     })
 }
+
+export const generateTitleController = async (req, res) => {
+    const {chatId} = req.params
+    const {message} = req.body
+
+    const chat = await chatModel.findOne({
+        _id: chatId,
+        userId: req.user.id
+    })
+
+    if(!chat){
+        const error = new Error("Chat not found")
+        error.statusCode = 404
+        throw error
+    }
+    const title = await generateTitle(message)
+    chat.title = title
+    await chat.save()
+    res.status(200).json({
+        success: true,
+        title
+    })
+}
+
+
+export const newChatController = async (req, res) => {
+    const chat = await chatModel.create({
+        userId: req.user.id,
+        title: "New Chat"
+    })
+    res.status(201).json({
+        success: true,
+        chat
+    })
+}
+
 
 export const getChats = async (req, res) => {
     const chats = await chatModel.find({ userId: req.user.id })
@@ -89,7 +122,7 @@ export const deleteChat = async (req, res) => {
         throw error
     }
 
-    await chatModel.deleteOne({chatId})
+    await chatModel.deleteOne({_id: chatId})
 
     await messageModel.deleteMany({chatId})
 
@@ -98,17 +131,3 @@ export const deleteChat = async (req, res) => {
         message: "Chat deleted successfully"
     })
 }
-
-
-
-
-
-setChats((prev) => {
-    return {
-        ...prev,
-        [chat.title]: {
-            ...chat,
-            messages: [{content: message, role: 'user'}, aiMessage]
-        }
-    }
-})
