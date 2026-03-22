@@ -7,23 +7,43 @@ nav {
 
 
 
-    .left{
+    .left {
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
-    .create-post {
-        display: inline-block;
-        font-size: 1rem;
-        font-weight: 600;
 
-        &:hover {
-            background-color: #0040d7;
+    .right {
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+
+
+
+        .create-post,
+        .logout {
+            display: inline-block;
+            font-size: 1rem;
+            font-weight: 600;
+
+            &:hover {
+                background-color: #0040d7;
+            }
+
+            &:active {
+                scale: 0.96;
+            }
         }
 
-        &:active {
-            scale: 0.96;
+        .logout{
+            background-color: rgb(228, 24, 24);
+
+            &:hover{
+                background-color: #d01717;
+            }
         }
     }
 
@@ -39,7 +59,7 @@ nav {
     background: none;
     border: none;
     padding: 0.25rem;
-   
+
 
     &:hover {
         background-color: none;
@@ -48,10 +68,15 @@ nav {
 
 @media screen and (max-width: 899px) {
 
-    nav{
-        padding: 0.5rem 0rem ;
+    .create-post{
+        display: none !important;
+
     }
-    
+
+    nav {
+        padding: 0.5rem 0rem;
+    }
+
     .mobile-bottom-nav {
         display: flex;
         justify-content: space-around;

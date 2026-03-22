@@ -1,8 +1,17 @@
 import React from 'react'
 import '../../shared/nav.scss'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../../auth/hooks/useAuth'
+
 
 const Nav = () => {
+
+    const {handleLogout} = useAuth()
+    const handleLogoutClick = () => {
+        handleLogout()
+    }
+
+
   const location = useLocation()
   
   return (
@@ -13,6 +22,7 @@ const Nav = () => {
           </div>
           <div className="right">
               <Link className='create-post' to={'/create-post'} >Create Post</Link>
+              <button onClick={handleLogoutClick} className='logout'>Logout</button>
           </div>
       </nav>
 

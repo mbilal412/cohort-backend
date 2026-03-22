@@ -34,6 +34,16 @@ export async function loginUser({identifier, password}){
     }
 }
 
+export async function logoutUser(){
+    try{
+        const response = await api.post('/api/auth/logout')
+        return response.data
+    }
+    catch(error){
+        throw error
+    }
+}
+
 export async function getMe(){
     try{
         const response = await api.get('/api/auth/get-me')
