@@ -1,4 +1,4 @@
-import { getFollowers, acceptRequest, rejectRequest, getFollowing, unfollowUser, cancelFollowRequest } from "../services/user.api"
+import { getFollowers, acceptRequest, rejectRequest, getFollowing, unfollowUser, cancelFollowRequest, getSuggestedUsers, followUser } from "../services/user.api"
 import { useContext } from "react"
 import { UserContext } from '../user.context'
 
@@ -6,7 +6,7 @@ import { UserContext } from '../user.context'
 
 export const useUser = () => {
 
-    const {followers, setFollowers, following, setFollowing} = useContext(UserContext)
+    const {followers, setFollowers, following, setFollowing, suggestedUsers, setSuggestedUsers} = useContext(UserContext)
 
     async function handleGetFollowers(){
         try{
@@ -87,7 +87,31 @@ export const useUser = () => {
         }
     }
 
-    return {
-        handleGetFollowers,handleAcceptRequest,handleRejectRequest,handleGetFollowing, handleUnfollowUser, handleCancelFollowRequest,  followers, following
+    async function handleGetSuggestedUsers(){
+        try{
+            const response = await getSuggestedUsers()
+            setSuggestedUsers(response.suggestedUsers)
+        }
+        catch(error){
+            console.log(error.response.data)
+        }
     }
-} 
+
+    async function handleFollowUser(userId){
+        try{
+            const response = await followUser(userId)
+            // Add to following (optimistic update or re-fetch)
+            // For now, let's just re-fetch following and suggestions
+            handleGetFollowing()
+            handleGetSuggestedUsers()
+            console.log(response)
+        }
+        catch(error){
+            console.log(error.response.data)
+        }
+    }
+
+    return {
+        handleGetFollowers,handleAcceptRequest,handleRejectRequest,handleGetFollowing, handleUnfollowUser, handleCancelFollowRequest, handleGetSuggestedUsers, handleFollowUser, followers, following, suggestedUsers
+    }
+}

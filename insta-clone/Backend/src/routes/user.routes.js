@@ -14,6 +14,7 @@ userRouter.patch('/follow/accept/:requestId',identifyUser, userController.accept
 userRouter.delete('/follow/reject/:requestId',identifyUser, userController.rejectFollowRequestController)
 userRouter.get('/followers', identifyUser, userController.getFollowers)
 userRouter.get('/following', identifyUser, userController.getFollowing)
+userRouter.get('/suggested-users', identifyUser, userController.getSuggestedUsers)
 userRouter.delete('/follow/cancel/:userId',identifyUser, userController.cancelFollowRequestController)
 
 module.exports = userRouter

@@ -63,3 +63,21 @@ export async function cancelFollowRequest(userId){
         throw error
     }
 }
+
+export async function getSuggestedUsers(){
+    try{
+        const response = await api.get('/api/user/suggested-users')
+        return response.data
+    }catch(error){
+        throw error
+    }
+}
+
+export async function followUser(userId){
+    try{
+        const response = await api.post(`/api/user/follow/${userId}`)
+        return response.data
+    }catch(error){
+        throw error
+    }
+}

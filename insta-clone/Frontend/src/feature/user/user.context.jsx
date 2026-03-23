@@ -8,9 +8,10 @@ const UserContextProvider = ({children}) => {
 
     const [followers, setFollowers] = useState()
     const [following, setFollowing] = useState()
+    const [suggestedUsers, setSuggestedUsers] = useState()
 
   return (
-    <UserContext.Provider value={{followers, setFollowers, following, setFollowing}}>
+    <UserContext.Provider value={{followers, setFollowers, following, setFollowing, suggestedUsers, setSuggestedUsers}}>
         {children}
     </UserContext.Provider>
   )

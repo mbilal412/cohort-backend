@@ -1,6 +1,6 @@
 @use "../../shared/global.scss";
 
-$bg-dark: #111;
+/* ── Network Page ── */
 
 .network-main {
   width: 100%;
@@ -9,19 +9,31 @@ $bg-dark: #111;
   flex-direction: column;
   justify-content: flex-start; /* Aligns content to the top */
   align-items: center;
-  padding: 1.5rem;
-  background-color: $bg-dark;
+  padding: var(--space-lg);
+  background-color: var(--bg-primary);
 
   .network-page {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
+
+    .network-content {
+      margin-top: var(--space-md);
+    }
   }
 
   @media screen and (max-width: 899px) {
-    padding-top: 1rem;
+    padding-top: var(--space-md);
+
     .top-nav {
-      display: none; /* Hides top nav on mobile */
+      display: none;
+    }
+  }
+
+  /* ── 4K / Ultra-wide ── */
+  @media screen and (min-width: 2560px) {
+    .network-page {
+      max-width: 700px;
     }
   }
 }

@@ -405,6 +405,10 @@ $font-body: 'DM Sans', sans-serif;
     text-decoration: none;
     text-align: center;
     display: block;
+
+    &:active{
+      transform: scale(0.98);
+    }
   }
 }
 
@@ -548,6 +552,10 @@ $font-body: 'DM Sans', sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 4px;
+
+    &:active{
+      transform: scale(0.98);
+    }
 
     @media (min-width: 1024px) {
       border-radius: 12px;

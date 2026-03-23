@@ -209,7 +209,32 @@ async function getFollowing(req, res) {
     })
 }
 
+async function getSuggestedUsers(req, res) {
+    const userId = req.user.id
 
+    // Get all users except current user
+    const allUsers = await userModel.find({ _id: { $ne: userId } })
 
+    // Get all follow relations for current user (where they are the follower)
+    const existingRelations = await followModel.find({ follower: userId })
+    const followedUserIds = existingRelations.map(rel => rel.followee.toString())
 
-module.exports = { followUserController, unfollowUserController, acceptFollowRequestController, rejectFollowRequestController, getFollowers, getFollowing, cancelFollowRequestController }
+    // Filter out users already followed or with pending requests
+    const suggestedUsers = allUsers.filter(user => !followedUserIds.includes(user._id.toString()))
+
+    res.status(200).json({
+        message: 'suggested users fetched',
+        suggestedUsers
+    })
+}
+
+module.exports = { 
+    followUserController, 
+    unfollowUserController, 
+    acceptFollowRequestController, 
+    rejectFollowRequestController, 
+    getFollowers, 
+    getFollowing, 
+    cancelFollowRequestController,
+    getSuggestedUsers 
+}
