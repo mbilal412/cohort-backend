@@ -185,6 +185,7 @@ $border-color: rgba(255, 255, 255, 0.08);
   }
 
   .chat-main {
+    
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -192,7 +193,7 @@ $border-color: rgba(255, 255, 255, 0.08);
     width: 100%;
 
     .chat-header {
-      height: 64px;
+      height: 54px;
       display: flex;
       align-items: center;
       padding: 0 16px;
@@ -275,20 +276,193 @@ $border-color: rgba(255, 255, 255, 0.08);
           }
         }
 
-        &.ai {
+        &.assistant {
           align-self: flex-start;
 
           .content {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid $border-color;
-            border-radius: 18px 18px 18px 4px;
+            background: transparent;
+            border: none;
+            border-radius: 0;
           }
         }
 
         .content {
-          padding: 5px 16px;
-          font-size: 14px;
-          line-height: 1.5;
+          padding: 16px 18px;
+          font-size: 15px;
+          line-height: 1.7;
+          color: $text-primary;
+          width: 100%;
+          overflow-x: hidden;
+
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6 {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            margin: 0 0 10px;
+            color: lighten($text-primary, 5%);
+          }
+
+          p {
+            margin: 0 0 12px;
+            color: $text-secondary;
+          }
+
+          p:last-child {
+            margin-bottom: 0;
+          }
+
+          ul,
+          ol {
+            margin: 0 0 14px 20px;
+            padding-left: 16px;
+            color: $text-secondary;
+          }
+
+          ul {
+            list-style: disc;
+          }
+
+          ol {
+            list-style: decimal;
+          }
+
+          li {
+            margin-bottom: 6px;
+          }
+
+          strong {
+            color: lighten($text-primary, 15%);
+          }
+
+          code {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 13px;
+          }
+
+          pre {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            margin: 0 0 16px;
+            overflow-x: visible;
+            white-space: pre-wrap;
+            word-break: break-word;
+
+            code {
+              background: transparent;
+              padding: 0;
+              font-size: 14px;
+            }
+          }
+
+          blockquote {
+            margin: 0 0 16px;
+            padding-left: 14px;
+            border-left: 3px solid $accent-purple;
+            color: $text-secondary;
+            font-style: italic;
+          }
+
+          .md-table-wrap {
+            width: 100%;
+            margin: 0 0 16px;
+            overflow-x: auto;
+
+            &::-webkit-scrollbar {
+              height: 6px;
+            }
+
+            &::-webkit-scrollbar-button {
+              -webkit-appearance: none;
+              display: none;
+              width: 0;
+              height: 0;
+              background: transparent;
+              border: none;
+            }
+
+            &::-webkit-scrollbar-button:single-button,
+            &::-webkit-scrollbar-button:horizontal:decrement,
+            &::-webkit-scrollbar-button:horizontal:increment {
+              -webkit-appearance: none;
+              display: none;
+              width: 0;
+              height: 0;
+              background: transparent;
+              border: none;
+            }
+
+            &::-webkit-scrollbar-button:horizontal:start:decrement,
+            &::-webkit-scrollbar-button:horizontal:start:increment,
+            &::-webkit-scrollbar-button:horizontal:end:decrement,
+            &::-webkit-scrollbar-button:horizontal:end:increment {
+              -webkit-appearance: none;
+              display: none;
+              width: 0;
+              height: 0;
+              background: transparent;
+              border: none;
+            }
+
+            &::-webkit-scrollbar-track {
+              background: rgba(255, 255, 255, 0.08);
+              border-radius: 999px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+              background: rgba(173, 181, 189, 0.8);
+              border-radius: 999px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+              background: rgba(173, 181, 189, 1);
+            }
+
+            scrollbar-width: thin;
+            scrollbar-color: rgba(173, 181, 189, 0.8) rgba(255, 255, 255, 0.08);
+          }
+
+          table {
+            width: max-content;
+            min-width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 6px;
+          }
+
+          th,
+          td {
+            border: none;
+            padding: 10px 12px;
+            text-align: left;
+            white-space: normal;
+            line-height: 1.55;
+          }
+
+          th {
+            color: lighten($text-primary, 8%);
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.2px;
+          }
+
+          td {
+            color: $text-secondary;
+            font-size: 14px;
+          }
+
+          hr {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.18);
+            margin: 12px 0;
+          }
         }
 
         .time {
@@ -300,7 +474,8 @@ $border-color: rgba(255, 255, 255, 0.08);
     }
 
     .input-wrapper {
-      padding: 16px;
+      margin-bottom: 5px !important;
+      padding: 13px !important;
       width: 100%;
       background: $bg-dark;
 
@@ -322,7 +497,7 @@ $border-color: rgba(255, 255, 255, 0.08);
         border-radius: 16px;
         display: flex;
         align-items: center;
-        padding: 8px 12px;
+        padding: 3px 8px;
         width: 100%;
         max-width: 100%;
         margin: 0 auto;
@@ -379,8 +554,8 @@ $border-color: rgba(255, 255, 255, 0.08);
         }
 
         .send-btn {
-          width: 36px;
-          height: 36px;
+          width: 30px;
+          height: 30px;
           background: $accent-purple;
           color: white;
           border: none;
@@ -389,7 +564,7 @@ $border-color: rgba(255, 255, 255, 0.08);
           cursor: pointer;
           transition: transform 0.2s;
           flex-shrink: 0;
-          align-self: flex-end;
+          align-self: center;
 
           &:hover {
             transform: scale(1.05);

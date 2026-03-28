@@ -1,14 +1,20 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useChat } from '../hooks/useChat'
+import { useAuth } from '../../auth/hooks/useAuth'
 
 const Sidebar = ({ isSidebarOpen, handleNewChat, handleClickChat }) => {
 
   const { handleDeleteChat } = useChat()
+  const { handleLogout } = useAuth()
 
   const handleDelete = (e, chatId) => {
     e.stopPropagation()
     handleDeleteChat(chatId)
+  }
+
+  const handleLogoutButton = () => {
+    handleLogout()
   }
 
   const chats = useSelector((state) => state.chat.chats)
@@ -32,7 +38,7 @@ const Sidebar = ({ isSidebarOpen, handleNewChat, handleClickChat }) => {
         </div>
       </div>
       <div className="bottom">
-        <button className='logout'>Logout</button>
+        <button onClick={handleLogoutButton} className='logout'>Logout</button>
       </div>
     </aside>
   )

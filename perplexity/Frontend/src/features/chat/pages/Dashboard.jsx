@@ -90,9 +90,13 @@ const Dashboard = () => {
         <ChatWindow handleNewChat={handleNewChat} />
 
         {/* Floating Input Area */}
-        <div className="input-wrapper">
+
+        {currentChatId && (
+          <div className="input-wrapper">
           <ChatInput input={input} setInput={setInput} handleClickSend={handleClickSend} />
         </div>
+        )}
+        
       </main>
     </div>
   )

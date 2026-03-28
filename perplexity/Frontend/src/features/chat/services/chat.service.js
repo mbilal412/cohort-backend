@@ -7,12 +7,55 @@ const api = axios.create({
 })
 
 
-export const sendMessage = async ({ message, chatId }) => {
-    const response = await api.post(`/api/chat/sendMessage`,{
-        message,
-        chatId
+export const sendMessage = async ({ message, chatId, onEvent }) => {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/chat/sendMessage`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message, chatId })
     })
-    return response.data
+
+    if(!response.ok || !response.body){
+        throw new Error('Network response was not ok')
+    }
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+
+    let buffer = ''
+
+    while(true){
+        const {value, done} = await reader.read()
+        if(done) break
+
+        buffer += decoder.decode(value, {stream: true})
+
+        const event = buffer.split('\n\n')
+
+        buffer = event.pop() || ''
+
+
+        event.forEach(e =>{
+            const lines = e.split('\n')
+            const eventLine = lines.find(l => l.startsWith('event: '))
+            const dataLine = lines.find(l => l.startsWith('data: '))
+
+            if(!eventLine || !dataLine) return
+
+            const eventName = eventLine.replace('event: ', '')
+            const data = JSON.parse(dataLine.replace('data: ', ''))
+
+
+            if(typeof onEvent === 'function'){
+                onEvent(eventName, data)
+            }
+        })
+        
+    }
+
+    return true
 }
 
 export const generateTitle = async ({message, chatId}) => {

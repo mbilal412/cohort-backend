@@ -1,7 +1,8 @@
-import { generateTitle, generateResponse } from '../services/ai.service.js'
+import { generateTitle, generateResponse, generateResponseStream } from '../services/ai.service.js'
 import messageModel from '../models/message.model.js'
 import chatModel from '../models/chat.model.js'
-import mongoose from 'mongoose'
+
+
 export const sendMessageController = async (req, res) => {
 
     const { message, chatId } = req.body
@@ -9,38 +10,48 @@ export const sendMessageController = async (req, res) => {
 
     let title = null, chat = null
 
-    if (!chatId) {
-        title = await generateTitle(message)
-        chat = await chatModel.create({
-            userId: req.user.id,
-            title
-        })
-        
-    }
 
     const userMessage = await messageModel.create({
         role: 'user',
         content: message,
-        chatId : chatId || chat._id
+        chatId : chatId 
     })
 
     const messages = await messageModel.find({ chatId : chatId || chat._id });
 
-    const response = await generateResponse(messages)
+    res.setHeader('content-type', 'text/event-stream')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    res.setHeader('X-Accel-Buffering', 'no')
+
+    if(res.flushHeaders) res.flushHeaders();
+
+    const sendEvent = (eventName, payload) =>{
+        res.write(`event: ${eventName}\n`)
+        res.write(`data: ${JSON.stringify(payload)}\n\n`)
+    }
+
+    
+
+    const fullResponse = await generateResponseStream(messages, (token) => {
+        sendEvent('chunk', {
+            token
+        })
+    })
 
     const aiMessage = await messageModel.create({
         role: 'assistant',
-        content: response,
-        chatId : chatId || chat._id
+        content: fullResponse,
+        chatId : chatId 
     })
 
-    res.status(201).json({
+
+    sendEvent('done', {
         success: true,
-        message: "Message sent successfully",
-        title,
-        chat,
         aiMessage
     })
+
+    res.end()
 }
 
 export const generateTitleController = async (req, res) => {

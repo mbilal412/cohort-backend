@@ -25,6 +25,36 @@ export const generateResponse = async (messages) => {
   return response.content
 }
 
+
+
+
+export const generateResponseStream = async (messages, onToken) => {
+  const stream = await model.stream(messages.map(msg => {
+    if (msg.role === 'user') {
+      return new HumanMessage({ content: msg.content })
+    } else {
+      return new SystemMessage({ content: msg.content })
+    }
+  }))
+
+  let fullResponse = ''
+
+  for await (const chunk of stream) {
+    const token = chunk.text
+    if(!token) continue
+
+    fullResponse += token
+
+    if(typeof onToken === 'function'){
+      onToken(token)
+    }
+  }
+  return fullResponse
+}
+
+
+
+
 export const generateTitle = async (message) => {
 
 
